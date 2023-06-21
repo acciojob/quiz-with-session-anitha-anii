@@ -107,4 +107,4 @@ questionsElement.addEventListener("change", saveProgress);
 // Display the score
 displayScore();
 
-// renderQuestions();
+ renderQuestions();
