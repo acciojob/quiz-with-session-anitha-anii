@@ -1,4 +1,4 @@
-//your JS code here.
+// Your JS code here.
 
 // Do not change code below this line
 // This code will just display the questions to the screen
@@ -30,6 +30,9 @@ const questions = [
   },
 ];
 
+const questionsElement = document.getElementById("questions");
+const userAnswers = [];
+
 // Display the quiz questions and choices
 function renderQuestions() {
   for (let i = 0; i < questions.length; i++) {
@@ -46,6 +49,9 @@ function renderQuestions() {
       if (userAnswers[i] === choice) {
         choiceElement.setAttribute("checked", true);
       }
+      choiceElement.addEventListener("change", function (event) {
+        userAnswers[i] = event.target.value;
+      });
       const choiceText = document.createTextNode(choice);
       questionElement.appendChild(choiceElement);
       questionElement.appendChild(choiceText);
@@ -53,4 +59,52 @@ function renderQuestions() {
     questionsElement.appendChild(questionElement);
   }
 }
+
+// Save user's answers in session storage
+function saveProgress() {
+  sessionStorage.setItem("userAnswers", JSON.stringify(userAnswers));
+}
+
+// Load user's answers from session storage
+function loadProgress() {
+  const savedAnswers = sessionStorage.getItem("userAnswers");
+  if (savedAnswers) {
+    userAnswers = JSON.parse(savedAnswers);
+  }
+}
+
+// Calculate the score
+function calculateScore() {
+  let score = 0;
+  for (let i = 0; i < questions.length; i++) {
+    if (userAnswers[i] === questions[i].answer) {
+      score++;
+    }
+  }
+  return score;
+}
+
+// Display the score on the page
+function displayScore() {
+  const score = calculateScore();
+  const scoreElement = document.createElement("p");
+  scoreElement.textContent = "Your score is " + score + " out of 5.";
+  questionsElement.appendChild(scoreElement);
+
+  // Store the score in local storage
+  localStorage.setItem("score", score);
+}
+
+// Render the questions
 renderQuestions();
+
+// Load the user's progress
+loadProgress();
+
+// Save the progress when the radio button changes
+questionsElement.addEventListener("change", saveProgress);
+
+// Display the score
+displayScore();
+
+// renderQuestions();
